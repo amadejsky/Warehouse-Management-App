@@ -1,20 +1,33 @@
 plugins {
-    id 'java'
+    application
+    id("pl.allegro.tech.build.axion-release").version("1.13.6")
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+project.version = scmVersion.version
+
+scmVersion {
+    localOnly = true
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    //implementation("com.google.guava:guava:30.1.1-jre")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-test {
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+application {
+    mainClass.set("warehouse.management.app.App")
+}
+
+tasks.named<Test>("test") {
     useJUnitPlatform()
 }
