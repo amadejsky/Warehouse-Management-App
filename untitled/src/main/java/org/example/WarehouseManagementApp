@@ -1,0 +1,55 @@
+package com.example;
+
+import com.google.common.collect.Maps;
+
+import java.util.Map;
+import java.util.Scanner;
+import java.util.UUID;
+
+public class WarehouseManagementApp {
+    private static final Map<UUID, Product> products = Maps.newHashMap();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Wybierz akcję:");
+            System.out.println("1. Dodaj produkt");
+            System.out.println("2. Wyjście");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    addProduct(scanner);
+                    break;
+                case 2:
+                    System.out.println("Dziękujemy. Do widzenia!");
+                    System.exit(0);
+                default:
+                    System.out.println("Nieprawidłowy wybór. Spróbuj ponownie.");
+            }
+        }
+    }
+
+    private static void addProduct(Scanner scanner) {
+        System.out.println("Podaj nazwę produktu:");
+        String name = scanner.next();
+
+        System.out.println("Podaj ilość produktu:");
+        int quantity = scanner.nextInt();
+
+        UUID productId = UUID.randomUUID();
+        Product product = new Product(productId, name, quantity);
+        products.put(productId, product);
+
+        System.out.println("Utworzono produkt o identyfikatorze: " + productId);
+    }
+}
+
+class Product {
+    private UUID id;
+    private String name;
+    private int quantity;
+
+    public Product(UU
