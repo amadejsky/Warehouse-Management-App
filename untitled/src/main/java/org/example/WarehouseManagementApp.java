@@ -136,6 +136,71 @@ public class WarehouseManagementApp {
         System.out.println("Najwięcej sztuk produktu (" + maxQuantity + "): " + maxQuantityProductName);
         System.out.println("Najmniej sztuk (" + minQuantity + "): " + minQuantityProductName);
     }
+    private static void updateProduct(Scanner scanner) {
+        System.out.println("Podaj identyfikator produktu do aktualizacji:");
+        String idString = scanner.next();
+
+        try {
+            UUID productId = UUID.fromString(idString);
+
+            if (products.containsKey(productId)) {
+                Product product = products.get(productId);
+
+                System.out.println("Musisz określić, co chcesz zmodyfikować - cena, nazwa, ilość:");
+                String fieldToUpdate = scanner.next().toLowerCase();
+
+                switch (fieldToUpdate) {
+                    case "cena":
+                        updatePrice(scanner, product);
+                        break;
+                    case "nazwa":
+                        updateName(scanner, product);
+                        break;
+                    case "ilość":
+                        updateQuantity(scanner, product);
+                        break;
+                    default:
+                        System.out.println("Nieprawidłowa opcja. Spróbuj ponownie.");
+                }
+            } else {
+                System.out.println("Brak produktu o zadanym identyfikatorze.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Nieprawidłowy format identyfikatora. Spróbuj ponownie.");
+        }
+    }
+
+    private static void updatePrice(Scanner scanner, Product product) {
+        MoneyParser moneyParser = new MoneyParser();
+        do {
+            System.out.println("Podaj nową cenę (aktualna " + product.getPrice() + "):");
+            String newPriceInput = scanner.next();
+            try {
+                Money newPrice = moneyParser.parse(newPriceInput);
+                product.setPrice(newPrice);
+                System.out.println("Zaktualizowano cenę.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Nieprawidłowa wartość, spróbuj jeszcze raz.");
+                continue;
+            }
+            break;
+        } while (true);
+    }
+
+    private static void updateName(Scanner scanner, Product product) {
+        System.out.println("Podaj nową nazwę (aktualna " + product.getName() + "):");
+        String newName = scanner.next();
+        product.setName(newName);
+        System.out.println("Zaktualizowano nazwę.");
+    }
+
+    private static void updateQuantity(Scanner scanner, Product product) {
+        System.out.println("Podaj nową ilość (aktualna " + product.getQuantity() + "):");
+        int newQuantity = scanner.nextInt();
+        product.setQuantity(newQuantity);
+        System.out.println("Zaktualizowano ilość.");
+    }
+
 }
 
 }

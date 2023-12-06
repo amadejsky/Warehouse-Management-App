@@ -17,6 +17,17 @@ public class Product {
         this.creationDate = LocalDate.now();
         this.price = price;
     }
+    public void setPrice(Money price) {
+        this.price = price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     // Dodaj gettery do nowych pól
     public UUID getId() {
