@@ -5,6 +5,9 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_FixedWidth;
+import de.vandermeer.asciitable.TextAlignment;
 
 public class WarehouseManagementApp {
     private static final Map<UUID, Product> products = Maps.newHashMap();
@@ -199,6 +202,69 @@ public class WarehouseManagementApp {
         int newQuantity = scanner.nextInt();
         product.setQuantity(newQuantity);
         System.out.println("Zaktualizowano ilość.");
+    }
+    private static void showStats(String reportType) {
+        switch (reportType) {
+            case "łączna-wartość-produktów":
+                showTotalValueReport();
+                break;
+            case "10-najbardziej-wartościowych-produktów":
+                showTopProductsReport();
+                break;
+            default:
+                showDefaultStats();
+        }
+    }
+
+    private static void showTotalValueReport() {
+        BigDecimal totalValue = BigDecimal.ZERO;
+
+        for (Product product : products.values()) {
+            BigDecimal pricePerUnit = product.getPrice().getAmount();
+            BigDecimal quantity = BigDecimal.valueOf(product.getQuantity());
+            totalValue = totalValue.add(pricePerUnit.multiply(quantity));
+        }
+
+        System.out.println("Łączna wartość wszystkich produktów wynosi: " + totalValue + " " + getCurrencyCode());
+    }
+
+    private static void showTopProductsReport() {
+        List<Product> sortedProducts = products.values().stream()
+                .sorted(Comparator.comparing(p -> p.getPrice().getAmount()).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+
+        AsciiTable topProductsTable = new AsciiTable();
+        topProductsTable.setTextAlignment(TextAlignment.LEFT);
+        topProductsTable.addRule();
+        topProductsTable.addRow("ID", "Nazwa produktu", "Cena");
+        topProductsTable.addRule();
+
+        for (Product product : sortedProducts) {
+            topProductsTable.addRow(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice().getAmount() + " " + getCurrencyCode()
+            );
+            topProductsTable.addRule();
+        }
+
+        topProductsTable.getRenderer().setCWC(new CWC_FixedWidth()
+                .add(36)
+                .add(40)
+                .add(20)
+        );
+
+        System.out.println(topProductsTable.render());
+    }
+
+    private static void showDefaultStats() {
+        // Kod dla aktualnej funkcjonalności STATS bez zmian
+    }
+
+    private static String getCurrencyCode() {
+        // Pobierz domyślny kod waluty, można dostosować w zależności od potrzeb
+        return Currency.getInstance(Locale.getDefault()).getCurrencyCode();
     }
 
 }
