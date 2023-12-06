@@ -66,12 +66,27 @@ public class WarehouseManagementApp {
             System.out.println("Nieprawidłowy format identyfikatora. Spróbuj ponownie.");
         }
     }
+    private static void showProduct(Scanner scanner) {
+        System.out.println("Podaj identyfikator produktu do wyświetlenia:");
+        String idString = scanner.next();
+
+        try {
+            UUID productId = UUID.fromString(idString);
+
+            if (products.containsKey(productId)) {
+                Product product = products.get(productId);
+                System.out.println("Identyfikator produktu: " + product.getId());
+                System.out.println("Nazwa produktu: " + product.getName());
+                System.out.println("Sztuk na magazynie: " + product.getQuantity());
+                System.out.println("Data dodania: " + product.getCreationDate());
+            } else {
+                System.out.println("Brak produktu o zadanym identyfikatorze.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Nieprawidłowy format identyfikatora. Spróbuj ponownie.");
+        }
+    }
+
 }
 }
 
-class Product {
-    private UUID id;
-    private String name;
-    private int quantity;
-
-    public Product(UU
