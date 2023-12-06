@@ -51,8 +51,22 @@ public class WarehouseManagementApp {
         System.out.println("Podaj ilość produktu:");
         int quantity = scanner.nextInt();
 
+        MoneyParser moneyParser = new MoneyParser();
+        Money price;
+        do {
+            System.out.println("Podaj cenę produktu (format: <kwota> <waluta>):");
+            String priceInput = scanner.next();
+            try {
+                price = moneyParser.parse(priceInput);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Nieprawidłowa wartość, spróbuj jeszcze raz.");
+                continue;
+            }
+            break;
+        } while (true);
+
         UUID productId = UUID.randomUUID();
-        Product product = new Product(productId, name, quantity);
+        Product product = new Product(productId, name, quantity, price);
         products.put(productId, product);
 
         System.out.println("Utworzono produkt o identyfikatorze: " + productId);
