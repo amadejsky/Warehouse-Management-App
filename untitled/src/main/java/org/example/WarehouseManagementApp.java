@@ -16,7 +16,9 @@ public class WarehouseManagementApp {
             System.out.println("Wybierz akcję:");
             System.out.println("1. Dodaj produkt");
             System.out.println("2. Usuń produkt");
-            System.out.println("3. Wyjście");
+            System.out.println("3. Wyświetl produkt");
+            System.out.println("4. Statystyki");
+            System.out.println("5. Wyjście");
 
             int choice = scanner.nextInt();
 
@@ -28,6 +30,12 @@ public class WarehouseManagementApp {
                     deleteProduct(scanner);
                     break;
                 case 3:
+                    showProduct(scanner);
+                    break;
+                case 4:
+                    showStats();
+                    break;
+                case 5:
                     System.out.println("Dziękujemy. Do widzenia!");
                     System.exit(0);
                 default:
@@ -86,6 +94,35 @@ public class WarehouseManagementApp {
             System.out.println("Nieprawidłowy format identyfikatora. Spróbuj ponownie.");
         }
     }
+    private static void showStats() {
+        int totalProducts = products.size();
+        int totalQuantity = 0;
+        int maxQuantity = Integer.MIN_VALUE;
+        String maxQuantityProductName = "";
+        int minQuantity = Integer.MAX_VALUE;
+        String minQuantityProductName = "";
+
+        for (Product product : products.values()) {
+            int quantity = product.getQuantity();
+            totalQuantity += quantity;
+
+            if (quantity > maxQuantity) {
+                maxQuantity = quantity;
+                maxQuantityProductName = product.getName();
+            }
+
+            if (quantity < minQuantity) {
+                minQuantity = quantity;
+                minQuantityProductName = product.getName();
+            }
+        }
+
+        System.out.println("Produkty w magazynie: " + totalProducts);
+        System.out.println("Sztuk: " + totalQuantity);
+        System.out.println("Najwięcej sztuk produktu (" + maxQuantity + "): " + maxQuantityProductName);
+        System.out.println("Najmniej sztuk (" + minQuantity + "): " + minQuantityProductName);
+    }
+}
 
 }
 }
